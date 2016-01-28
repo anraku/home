@@ -1,0 +1,3 @@
+[
+    { "keys": ["ctrl+shift+o"], "command": "fuzzy_start_from_file" }
+]
