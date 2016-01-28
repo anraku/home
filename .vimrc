@@ -19,3 +19,5 @@ vmap <silent> ;h :s?^\(\s*\)+ '\([^]\+\)',*\s*$?\1\2?g<CR>
 "javascript連結文字列からhtmlへ変換
 vmap <silent> ;q :s?^\(\s*\)\(.*\)\s*$? \1 + '\2'?<CR>
 
+"拡張子が.mdの場合のみハイライト適用
+au BufRead,BufNewFile *.md set filetype=markdown
