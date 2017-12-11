@@ -108,3 +108,6 @@ map <silent> [Tag]n :tabnext<CR>
 map <silent> [Tag]p :tabprevious<CR>
 " tp 前のタブ
 " --- vimのタブに関する設定 ---
+
+set background=dark
+colorscheme hybrid
