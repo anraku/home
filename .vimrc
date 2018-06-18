@@ -1,3 +1,47 @@
+" プラグインが実際にインストールされるディレクトリ
+let s:dein_dir = expand('~/.vim/dein')
+" dein.vim 本体
+let s:dein_repo_dir = s:dein_dir . '/repos/github.com/Shougo/dein.vim'
+
+" dein.vim がなければ github から落としてくる
+if &runtimepath !~# '/dein.vim'
+  if !isdirectory(s:dein_repo_dir)
+    execute '!git clone https://github.com/Shougo/dein.vim' s:dein_repo_dir
+  endif
+  execute 'set runtimepath^=' . fnamemodify(s:dein_repo_dir, ':p')
+endif
+
+" 設定開始
+if dein#load_state(s:dein_dir)
+  call dein#begin(s:dein_dir)
+
+  " プラグインリストを収めた TOML ファイル
+  let g:rc_dir    = expand('~/.vim/rc')
+  let s:toml      = g:rc_dir . '/dein.toml'
+  " TOML を読み込み、キャッシュしておく
+  call dein#load_toml(s:toml,      {'lazy': 0}) 
+
+  " 設定終了
+  call dein#end()
+  call dein#save_state()
+endif
+
+" もし、未インストールものものがあったらインストール
+if dein#check_install()
+  call dein#install()
+endif
+
+"#####プラグイン設定#####
+call plug#begin()
+Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries' }
+" ファイルオープンを便利に
+Plug 'Shougo/unite.vim'
+" Unite.vimで最近使ったファイルを表示できるようにする
+Plug 'Shougo/neomru.vim'
+" ファイルをtree表示してくれる
+Plug 'scrooloose/nerdtree'
+call plug#end()
+
 "#####表示設定#####
 set number "行番号を表示する
 set title "編集中のファイル名を表示
@@ -20,6 +64,19 @@ vmap <silent> ;h :s?^\(\s*\)+ '\([^]\+\)',*\s*$?\1\2?g<CR>
 "javascript連結文字列からhtmlへ変換
 vmap <silent> ;q :s?^\(\s*\)\(.*\)\s*$? \1 + '\2'?<CR>
 
+"###プラグイン設定###
+"NEARDTree
+let g:NERDTreeShowBookmarks=1
+map <C-t> :NERDTreeToggle<CR>
+
+"###uniteの設定###
+" バッファ一覧
+noremap <C-P> :Unite buffer<CR>
+" ファイル一覧
+noremap <C-N> :Unite -buffer-name=file file<CR>
+" 最近使ったファイルの一覧
+noremap <C-Z> :Unite file_mru<CR>
+
 "行番号の色を変更
 highlight LineNr ctermfg=239
 
@@ -35,29 +92,29 @@ nmap <Esc><Esc> :nohlsearch<CR><Esc>
 set mouse=a
 "NeoBundleの設定(begin)
 " neobundle settings {{{
-if has('vim_starting')
-  set nocompatible
-  " neobundle をインストールしていない場合は自動インストール
-  if !isdirectory(expand("~/.vim/bundle/neobundle.vim/"))
-    echo "install neobundle..."
-    " vim からコマンド呼び出しているだけ neobundle.vim のクローン
-    :call system("git clone git://github.com/Shougo/neobundle.vim ~/.vim/bundle/neobundle.vim")
-  endif
-  " runtimepath の追加は必須
-  set runtimepath+=~/.vim/bundle/neobundle.vim/
-endif
-call neobundle#begin(expand('~/.vim/bundle'))
-let g:neobundle_default_git_protocol='https'
-
-" neobundle#begin - neobundle#end の間に導入するプラグインを記載します。
-NeoBundleFetch 'Shougo/neobundle.vim'
-" ↓こんな感じが基本の書き方
-NeoBundle 'nanotech/jellybeans.vim'
-NeoBundle 'fatih/vim-go'
-
-" vimrc に記述されたプラグインでインストールされていないものがないかチェックする
-NeoBundleCheck
-call neobundle#end()
+"if has('vim_starting')
+"  set nocompatible
+"  " neobundle をインストールしていない場合は自動インストール
+"	  if !isdirectory(expand("~/.vim/bundle/neobundle.vim/"))
+"	    echo "install neobundle..."
+"	    " vim からコマンド呼び出しているだけ neobundle.vim のクローン
+"	    :call system("git clone git://github.com/Shougo/neobundle.vim ~/.vim/bundle/neobundle.vim")
+"	  endif
+"	  " runtimepath の追加は必須
+"	  set runtimepath+=~/.vim/bundle/neobundle.vim/
+"	endif
+"	call neobundle#begin(expand('~/.vim/bundle'))
+"	let g:neobundle_default_git_protocol='https'
+"	
+"	" neobundle#begin - neobundle#end の間に導入するプラグインを記載します。
+"	NeoBundleFetch 'Shougo/neobundle.vim'
+"	" ↓こんな感じが基本の書き方
+"	NeoBundle 'nanotech/jellybeans.vim'
+"	NeoBundle 'fatih/vim-go'
+"	
+"	" vimrc に記述されたプラグインでインストールされていないものがないかチェックする
+"	NeoBundleCheck
+"	call neobundle#end()
 filetype plugin indent on
 " どうせだから jellybeans カラースキーマを使ってみましょう
 set t_Co=256
@@ -109,4 +166,4 @@ map <silent> [Tag]p :tabprevious<CR>
 " tp 前のタブ
 " --- vimのタブに関する設定 ---
 set background=dark
-colorscheme hybrid
+"colorscheme hybrid
