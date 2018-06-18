@@ -6,3 +6,6 @@ repo = 'Shougo/neomru.vim'
 
 [[plugins]]
 repo = 'scrooloose/nerdtree'
+
+[[plugins]]
+repo = 'fatih/vim-go'
